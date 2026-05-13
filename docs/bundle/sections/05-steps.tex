@@ -1,0 +1,20 @@
+\chapter{Шаги выполнения конкурсного задания}
+\label{ch:steps}
+\index{конкурсное задание}
+
+\section{Рекомендуемая последовательность}
+
+\begin{enumerate}
+  \item Изучить вводные материалы и архитектуру (см. главы~\ref{ch:motivation} и~\ref{ch:architecture}).
+  \item Развернуть окружение: \texttt{make install}.
+  \item Запустить проверки: \texttt{make tests-all}.
+  \item Освоить подготовку пакета и сертификацию: \texttt{make prepare-cert-bundle}, \texttt{make certify-abu} (глава~\ref{ch:certification}).
+  \item Ознакомиться с критериями оценки (глава~\ref{ch:evaluation}) и открыть шаблон текстового отчёта в каталоге \path{src_solution/docs/} (критерий \textbf{C17}: разделы про архитектуру, политики, сквозные и security-тесты, сертификацию, диаграммы).
+  \item Разрабатывать решение в \texttt{src\_solution/}, опираясь на \texttt{src\_starting\_point/} (см. регламент в репозитории).
+  \item Заполнить отчёт в каталоге \path{src_solution/docs/} по шаблону; для прозрачной проверки баллов --- таблицу по \path{docs/templates/evaluation_report.md}.
+  \item Подать работу согласно требованиям жюри (приватный репозиторий, доступ организаторам).
+\end{enumerate}
+
+\section{Связь с разделами документа}
+
+Процедура сертификации детализируется в главе~\ref{ch:certification}; инфраструктура и тесты --- в главе~\ref{ch:infra}; критерии и подсказки по архитектуре решения --- в главе~\ref{ch:evaluation}.

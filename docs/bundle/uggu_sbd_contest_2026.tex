@@ -1,0 +1,59 @@
+% !TEX program = xelatex
+% Сборка: ./build.sh (из каталога docs/bundle) или latexmk -xelatex uggu_sbd_contest_2026.tex
+\documentclass[12pt,a4paper]{report}
+
+\newcommand{\docversion}{1.7.7}
+% Краткое название для колонтитула (полное --- на титуле)
+\newcommand{\doctitle}{Конкурсное задание УГГУ: ЦР и АБУ (СКИБ)}
+
+\input{preamble}
+
+\begin{document}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \centering
+  \vspace*{1.5cm}
+  {\LARGE\bfseries Конкурсное задание для олимпиады по кибериммунной разработке в УГГУ\par}
+  \vspace{1.2em}
+  {\large Цифровой рудник и автономная буровая установка как системы с конструктивной информационной безопасностью\par}
+  \vspace{1em}
+  {\large Весна 2026\par}
+  \vfill
+  {\large \textbf{Версия документа:} \docversion\par}
+  \vspace{0.8em}
+  {\large \textbf{Автор:} Соболев С.П.\par}
+  \vspace{2cm}
+  {\large Санкт-Петербург, 2026\par}
+  \vspace{0.9em}
+\end{titlepage}
+
+\pagestyle{fancy}
+
+\input{sections/00-abbreviations.tex}
+\input{sections/01-motivation.tex}
+\input{sections/02-architecture.tex}
+\input{sections/03-certification.tex}
+\input{sections/04-infrastructure.tex}
+\input{sections/05-steps.tex}
+\input{sections/06-evaluation.tex}
+\input{sections/07-sources.tex}
+\input{sections/08-faq.tex}
+\input{sections/09-appendices.tex}
+
+\clearpage
+\phantomsection
+\pdfbookmark[0]{Содержание}{tocend}
+\tableofcontents
+
+\clearpage
+\phantomsection
+\pdfbookmark[0]{Перечень иллюстраций}{lofend}
+\listoffigures
+
+\clearpage
+\phantomsection
+\pdfbookmark[0]{Предметный указатель}{idxend}
+\printindex
+
+\end{document}

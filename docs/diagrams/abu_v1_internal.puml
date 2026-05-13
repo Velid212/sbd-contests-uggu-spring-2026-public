@@ -1,0 +1,36 @@
+@startuml abu_v1_internal
+skinparam rectangle {
+  BackgroundColor #fff8e8
+}
+title АБУ v1 (с разделением ДВБ / недоверенный код)
+
+rectangle "ДВБ (Trusted Computing Base)" as TCB {
+  [Security Monitor] as MONITOR
+  [Policies] as POLICIES
+  [Event Log] as LOG
+  [Safety Checks] as SAFETY
+}
+
+rectangle "Недоверенный код (Other)" as OTHER {
+  [FastAPI API] as API
+  [Numpy Workflow] as NUMPY
+  [Pseudo AI] as AI
+}
+
+API --> MONITOR
+NUMPY --> MONITOR
+AI --> MONITOR
+MONITOR --> POLICIES
+MONITOR --> LOG
+MONITOR --> SAFETY
+
+note right of TCB
+  ДВБ: src_solution/abu/tcb/
+  Контроль доменов, политики безопасности
+end note
+
+note right of OTHER
+  Other: src_solution/abu/other/
+  API, вычисления, ИИ
+end note
+@enduml

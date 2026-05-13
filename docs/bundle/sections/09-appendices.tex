@@ -1,0 +1,229 @@
+\appendix
+
+\chapter{Полный перечень критериев оценки (C01--C25)}
+\label{app:criteria}
+\index{критерии оценки!полный перечень}
+
+Ниже приведён перечень в редакции, согласованной с автоматическим скриптом оценки. Оцениваются прежде всего \textbf{изменения конкурсанта}; свойства учебных ЦР и Регулятора как отдельные критерии не входят. Каждый критерий --- до 3 баллов; номинальная сумма до \textbf{75}. Расшифровка уровней --- в приложении~\ref{app:criteria-rubric} и \path{docs/criteria\_rubric.md}.
+
+\begin{longtable}{@{}p{0.12\textwidth}p{0.83\textwidth}@{}}
+\toprule
+\textbf{ID} & \textbf{Формулировка} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Формулировка} \\
+\midrule
+\endhead
+C01 & Все тесты репозитория (включая тесты решения) завершаются успешно \\
+C02 & Все тесты решения находятся в подкаталогах \texttt{src\_solution/tests/**} \\
+C03 & Маркер \texttt{security} в \texttt{pytest.ini} и использование в тестах \\
+C04 & Тесты журнала / \texttt{event\_log} \\
+C05 & Пример \texttt{sga.json} \\
+C06 & Примеры \texttt{SBOM\_TCB} / \texttt{SBOM\_OTHER} \\
+C07 & Успешное выполнение сертификации решения (пакет + ответ Регулятора) \\
+C08 & Сквозной автотест \textbf{ЦР--АБУ} (основной сценарий миссии), файл \texttt{tests/test\_e2e\_abu\_dm\_scenario.py} \\
+C09 & Оформление кода в \texttt{src\_solution/} (flake8, PEP8) \\
+C10 & Решение: журнал событий / \texttt{event\_log} в \texttt{src\_solution/} \\
+C11 & Решение: зависимости в \texttt{src\_solution/} (\texttt{requirements.txt} / \texttt{pyproject.toml}); тяжёлые в ДВБ $\rightarrow$ 0, вынесение в \texttt{requirements-other.txt} при пустом \texttt{requirements.txt} $\rightarrow$ 3 \\
+C12 & Тесты репозитория, \textbf{импортирующие} код из \texttt{src\_solution/} (AST) \\
+C13 & Раздел тестов безопасности в отчёте решения в каталоге \texttt{src\_solution/docs/} \\
+C14 & \texttt{numpy} в SBOM решения (\texttt{src\_solution/sbom/}): TCB vs OTHER (макс.\ 3) \\
+C15 & Тесты репозитория: журнал \texttt{event\_log} и код в \texttt{src\_solution} \\
+C16 & Покрытие ДВБ решения (\texttt{src\_solution/abu/tcb}) тестами \\
+C17 & Отчёт конкурсанта в каталоге \texttt{src\_solution/docs/} \\
+C18 & Решение: \textbf{security\_monitor}, \textbf{policies}; тесты политик (в т.\,ч. под \texttt{src\_solution/}) \\
+C19 & Решение: изоляция доменов безопасности; монитор с контролем запросов и ответов \\
+C20 & Стоимость сертификации --- место в рейтинге (жюри; в скрипте --- 0) \\
+C21 & Экспертно: соответствие политик архитектуре АБУ (жюри; в скрипте --- 0) \\
+C22 & Экспертно: полнота отчёта и воспроизводимость (жюри; в скрипте --- 0) \\
+C23 & Размер домена ДВБ: оценка по максимальному LOC одного доверенного домена \\
+C24 & Количество интерфейсов домена ДВБ: число разрешающих IPC-политик на домен \\
+C25 & Наличие \texttt{security\_monitor} в решении, security-тесты и покрытие monitor-кода \\
+\bottomrule
+\end{longtable}
+
+\input{sections/10-criteria-rubric.tex}
+
+\chapter{Пример отчёта участника (каталог \texttt{src\_solution/docs/} и таблица баллов)}
+\label{app:example-report}
+\index{отчёт!пример}
+
+\textbf{Текстовый отчёт} по критерию \textbf{C17} ведётся в каталоге \path{src\_solution/docs/} (в репозитории --- заполняемый шаблон с обязательными разделами согласно приложению~\ref{app:criteria-rubric}). Ниже --- \textbf{пример калибровки} скрипта баллов для текущего дерева репозитория (в т.\,ч. \texttt{src\_solution/abu/tcb}, \texttt{src\_solution/sbom/}). Имена критериев и логика совпадают с \path{scripts/evaluate_contest_score.py}.
+
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Поле} & \textbf{Значение} \\
+\midrule
+Участник / команда & заготовка \texttt{src\_starting\_point} (прототип организаторов) \\
+Коммит / тег & фактический коммит в репозитории \\
+Дата прогона & по факту прогона \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.8em}
+\noindent\textbf{Автоматические проверки}
+
+\begin{tabularx}{\textwidth}{@{}l X X@{}}
+\toprule
+Проверка & Результат & Примечание \\
+\midrule
+\texttt{make tests-all} & OK & типично \texttt{33 passed, 2 skipped} \\
+Покрытие общее & из лога сертификации & поле \texttt{coverage\_percent} \\
+Покрытие security & $\geq$ порога & \texttt{security\_coverage\_percent} \\
+Сертификация & успех при подготовленном пакете & \texttt{certificate\_id} = SHA-256 архива \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.8em}
+\noindent\textbf{Фрагмент лога сертификации} (пример):
+
+\begin{verbatim}
+Результат сертификации: успешно
+Стоимость (усл. ед.): <число из estimated_cost>
+Сертификат (SHA-256 пакета): <64 hex>
+\end{verbatim}
+
+\vspace{0.8em}
+\noindent\textbf{Баллы по критериям} (пример калибровки для заготовки без наполненного \texttt{src\_solution}):
+
+\begin{longtable}{@{}c p{0.62\textwidth} r@{}}
+\toprule
+№ & Критерий & Баллы \\
+\midrule
+\endfirsthead
+\toprule
+№ & Критерий & Баллы \\
+\midrule
+\endhead
+1 & C01: все тесты репозитория (включая тесты решения) завершаются успешно & 3.0 \\
+2 & C02: тесты безопасности (\texttt{tests/security/} или \texttt{src\_starting\_point/tests/security/}) & 3.0 \\
+3 & C03: маркер \texttt{security} в \texttt{pytest.ini} и использование в тестах & 3.0 \\
+4 & C04: \texttt{event\_log} / журнал & 1.0 \\
+5 & C05: пример \texttt{sga.json} & 3.0 \\
+6 & C06: SBOM TCB / OTHER в примерах & 3.0 \\
+7 & C07: \texttt{prepare\_certification\_bundle.sh} & 3.0 \\
+8 & C08: сквозной автотест ЦР--АБУ & 3.0 \\
+9 & C09: flake8 / PEP8 в \texttt{src\_solution} & 3.0 \\
+10 & C10: \texttt{event\_log} в \texttt{src\_solution} & 1.0 \\
+11 & C11: зависимости в \texttt{src\_solution} & 0.0 \\
+12 & C12: импорты \texttt{src\_solution} в тестах & 1.0 \\
+13 & C13: \texttt{security\_tests.md} и \texttt{src\_solution} & 2.0 \\
+14 & C14: SBOM \texttt{numpy} (TCB vs OTHER) & 2.0 \\
+15 & C15: тесты \texttt{event\_log} + \texttt{src\_solution} & 0.0 \\
+16 & C16: покрытие \texttt{src\_solution/abu/tcb} & 3.0 \\
+17 & C17: отчёт в каталоге \texttt{src\_solution/docs/} & 3.0 \\
+18 & C18: \texttt{security\_monitor}, policies; тесты политик & 0.0 \\
+19 & C19: изоляция доменов; монитор запрос/ответ & 0.0 \\
+20 & C20: стоимость сертификации (рейтинг, жюри) & 0.0 \\
+21 & C21: экспертно --- архитектура (жюри) & 0.0 \\
+22 & C22: экспертно --- отчёт (жюри) & 0.0 \\
+23 & C23: размер домена ДВБ (максимальный LOC) & 0.0 \\
+24 & C24: количество интерфейсов домена ДВБ & 0.0 \\
+25 & C25: monitor, security-тесты и покрытие monitor-кода & 0.0 \\
+\midrule
+\multicolumn{2}{@{}r}{\textbf{Сумма (raw):}} & \textbf{37.0 / 75} \\
+\bottomrule
+\end{longtable}
+
+\vspace{0.5em}
+\noindent\small Критерии C20--C22 (жюри) в автоматике 0; при отсутствии кода в \texttt{src\_solution/} соответствующие пункты дают 0.
+
+\chapter{Регламент соревнований (полный текст)}
+\label{app:regulations}
+\index{регламент}
+
+\section*{Термины}
+
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Термин} & \textbf{Определение} \\
+\midrule
+SGA & \textit{security goals and assumptions}; в коде и API; в текстах допустимо ЦПБ. \\
+Регулятор & сертификация пакета АБУ. \\
+ЦР & парк установок и миссии. \\
+\bottomrule
+\end{tabularx}
+
+\section*{Последовательность действий конкурсантов}
+
+\begin{enumerate}
+  \item Развернуть окружение: \texttt{make install}, при необходимости Docker (\texttt{make docker-up}).
+  \item Изучить \texttt{docs/context.md}, \texttt{docs/architecture.md}, \texttt{docs/certification\_process.md}.
+  \item Разрабатывать решение в \texttt{src\_solution/} (или согласованный каталог), опираясь на \texttt{src\_starting\_point/}.
+  \item Прогонять \texttt{make tests-all} и сертификацию (\texttt{make prepare-cert-bundle}, \texttt{make certify-abu} или API Регулятора).
+  \item Заполнить отчёт о решении в каталоге \texttt{src\_solution/docs/} (критерий C17) и таблицу баллов по \texttt{docs/templates/evaluation\_report.md}.
+  \item Подать работу: ссылка на \textbf{приватный} git-репозиторий; добавить пользователя организаторов с правами \textbf{разработчика} (GitHub: Collaborator с доступом на запись; GitLab: роль Developer или выше --- по инструкции жюри).
+\end{enumerate}
+
+\section*{Запрещённые приёмы}
+
+\begin{itemize}
+  \item Подмена или отключение автоматических тестов заготовки без обоснования в отчёте.
+  \item Обход Регулятора (подделка сертификата, недоступный для проверки хэш).
+  \item Публикация секретов, ключей, персональных данных в репозитории.
+  \item Плагиат без ссылки на источник.
+\end{itemize}
+
+\section*{Критерии оценки (обобщение)}
+
+25 критериев (C01--C25), каждый до 3 баллов; номинальная сумма до 75. Автоматическая часть: тесты (в т.\,ч. сквозной сценарий ЦР--АБУ), артефакты сдачи, эвристики по \texttt{src\_solution/} (включая C18--C19 и C23--C25). Экспертная часть: C20 (рейтинг по стоимости сертификации), C21--C22 --- жюри (в скрипте 0).
+
+Подсказка по C19--C20: учебный пример изоляции ---\\
+\path{references/traffic_light_demo/cyberimmunity-traffic-lights-example.ipynb}
+
+\section*{Разрешение равенства баллов}
+
+\begin{enumerate}
+  \item Больший балл за автоматическую часть (в т.\,ч. C01--C19).
+  \item Учёт C20--C22 (в т.\,ч. рейтинг по стоимости сертификации и экспертные критерии).
+  \item Более ранняя успешная сдача.
+  \item Меньше предупреждений/ошибок в отчёте сертификации.
+  \item Жюри по чек-листу (порядок объявляется до старта).
+\end{enumerate}
+
+\section*{Прозрачность}
+
+Единый шаблон отчёта; участник вправе апеллировать в оговорённые сроки, предоставляя логи и воспроизводимые команды.
+
+\chapter{Шаблон отчёта и порядок апелляции}
+\label{app:template-appeal}
+\index{апелляция}
+\index{шаблон отчёта}
+
+\section*{Структура отчёта (шаблоны)}
+
+\textbf{Текстовый отчёт} (критерий C17) --- файл в каталоге \path{src\_solution/docs/} в репозитории: архитектура, политики, сквозные и security-тесты, сертификация, диаграммы (см. приложение~\ref{app:criteria-rubric}, C17).
+
+\textbf{Таблица баллов} для прозрачности --- \path{docs/templates/evaluation\_report.md}. Участник заполняет разделы:
+
+\begin{tabularx}{\textwidth}{@{}c X@{}}
+\toprule
+\textbf{№} & \textbf{Раздел} \\
+\midrule
+1 & Автоматические проверки (таблица: проверка, результат, примечание) \\
+2 & Лог сертификации (фрагмент stdout / API) \\
+3 & Баллы по 25 критериям (0--3 за критерий), сумма / 75 \\
+4 & Разрешение равенства баллов (при равенстве суммы) \\
+5 & Апелляция: срок и контакт --- по объявлению жюри \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.8em}
+\noindent\textbf{Таблица критериев в отчёте} (формат строки):
+
+\begin{tabularx}{\textwidth}{@{}c X c@{}}
+\toprule
+№ & Критерий & Баллы (0--3) \\
+\midrule
+1--25 & C01--C25 (см. приложение~\ref{app:criteria}) & заполнить \\
+\bottomrule
+\end{tabularx}
+
+\section*{Порядок апелляции}
+
+\begin{enumerate}
+  \item Апелляция подаётся в рамках сроков, объявленных жюри для конкретного этапа олимпиады.
+  \item Участник предоставляет артефакты прозрачности: логи прогонов, воспроизводимые команды (\texttt{make tests-all}, \texttt{make certify-abu}, и т.\,д.), ссылку на коммит.
+  \item Контакт и форма подачи указываются в объявлении жюри; до публикации сроков --- ориентир: раздел «Прозрачность» регламента (приложение~\ref{app:regulations}).
+\end{enumerate}

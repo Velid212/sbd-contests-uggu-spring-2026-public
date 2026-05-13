@@ -1,0 +1,103 @@
+\chapter{Логика и процедура сертификации}
+\label{ch:certification}
+\index{сертификация}
+\index{SGA}
+\index{SBOM}
+
+\section{Назначение}
+
+Регулятор моделирует приём и проверку \textbf{сертификационного пакета} АБУ: исходный код, SGA, SBOM в разрезе доверенного и прочего кода (\texttt{SBOM\_TCB}, \texttt{SBOM\_OTHER}), тесты и покрытие. Успешная сертификация даёт идентификатор сертификата и оценку стоимости.
+
+\section{Подготовка пакета}
+
+Перед архивированием может вызываться генерация CycloneDX SBOM из манифеста. Затем скрипт:
+
+\begin{itemize}
+  \item копирует заготовку АБУ, примеры SGA и SBOM;
+  \item формирует \texttt{manifest.json} и архив \path{artifacts/abu_certification_bundle.tar.gz}.
+\end{itemize}
+
+В корне репозитория:
+
+\begin{itemize}
+  \item \texttt{make prepare-cert-bundle};
+  \item или \texttt{./scripts/prepare\_certification\_bundle.sh}.
+\end{itemize}
+
+\section{Подача заявки Регулятору}
+
+Варианты подачи:
+
+\begin{itemize}
+  \item \texttt{make certify-abu} --- вызов API из окружения Pipenv;
+  \item полный прогон \texttt{make tests-all} (интеграционные тесты цикла);
+  \item ручной запрос, поле \texttt{bundle\_path}:\\
+  {\small\texttt{POST /api/v1/certification/requests}};
+  \item в Docker: \texttt{POST} \texttt{/api/v1/} \texttt{certification/upload};\\
+  \texttt{multipart/form-data}.
+\end{itemize}
+
+В ответе фиксируются:
+
+\begin{itemize}
+  \item результат, \texttt{estimated\_cost}, \texttt{certificate\_id};
+  \item покрытие и \texttt{security\_coverage\_percent};
+  \item SGA после выдачи: \texttt{GET} \texttt{/api/v1/} \texttt{certificates/\{id\}/sga}.
+\end{itemize}
+
+\section{Оценка ДВБ, стоимость сертификации и эксплуатации}
+\label{sec:dvb-cost}
+\index{ДВБ}
+\index{стоимость сертификации}
+\index{стоимость эксплуатации}
+
+Регулятор оценивает \textbf{доверенную вычислительную базу} (ДВБ) по графу зависимостей в \texttt{SBOM\_TCB} (число рёбер $E$), по метрикам исходников пакета \texttt{abu} ($L$, $K$) и отдельно --- прочий состав в \texttt{SBOM\_OTHER} с понижающим весом $\kappa^{-1}$ (см.~\eqref{eq:cost-pre}). \textbf{Число компонентов} (условных доменов безопасности) в SBOM \textbf{не входит} в стоимость: допускается дробление ДВБ на много малых доменов без штрафа за~$N$; стимулируется \textbf{снижение числа рёбер} $E$ --- связей между компонентами в графе CycloneDX.
+
+Вклад SBOM для доверенной базы --- только от рёбер $E_{\mathrm{TCB}}$ исходя из идеи слабосвязанных доменов:
+\begin{equation}
+\label{eq:cost-tcb-sbom}
+  C_{\mathrm{TCB}}^{\mathrm{sbom}}(E_{\mathrm{TCB}}) = a_{\mathrm{tcb}} + \beta_1\, E_{\mathrm{TCB}} + \beta_2\, E_{\mathrm{TCB}}^{2}.
+\end{equation}
+Для прочего SBOM (до деления на $\kappa$) --- база и рёбра $E_{\mathrm{OTH}}$, без учёта числа компонентов:
+\begin{equation}
+\label{eq:cost-oth-sbom}
+  C_{\mathrm{OTH}}^{\mathrm{sbom}}(E_{\mathrm{OTH}}) = a_{\mathrm{oth}} + \gamma\, E_{\mathrm{OTH}}.
+\end{equation}
+Коэффициенты задаются в \path{regulator/cost_model.py} (\texttt{TCB\_SBOM\_BASE}, \texttt{TCB\_EDGE\_LINEAR}, \texttt{TCB\_EDGE\_QUADRATIC}, \texttt{OTHER\_SBOM\_BASE}, \texttt{OTHER\_EDGE\_LINEAR}).
+
+Сумма до учёта тяжёлых зависимостей (по SBOM, исходникам ДВБ и прочему SBOM):
+\begin{multline}
+\label{eq:cost-pre}
+  C_{\mathrm{pre}} = C_{\mathrm{TCB}}^{\mathrm{sbom}}(E_{\mathrm{TCB}}) + \lambda_L\, L + \lambda_K\, K \\
+  {}+ \frac{1}{\kappa}\, C_{\mathrm{OTH}}^{\mathrm{sbom}}(E_{\mathrm{OTH}}), \qquad \kappa = 100.
+\end{multline}
+Здесь $L$ --- число строк во всех \texttt{*.py} каталога \texttt{abu}; $K$ --- сумма цикломатических сложностей (Маккейб) по всем функциям и методам этого пакета; $\lambda_L = 0{,}15$, $\lambda_K = 0{,}8$ --- коэффициенты в прототипе (\path{regulator/cost_model.py}, \path{regulator/tcb_metrics.py}). В ответе API также возвращаются \texttt{tcb\_lines\_of\_code}${}=L$ и \texttt{tcb\_cyclomatic\_sum}${}=K$.
+
+Если в ДВБ обнаружена \textbf{тяжёлая} зависимость (в прототипе --- \texttt{numpy} в \texttt{SBOM\_TCB} или в \texttt{requirements.txt}), \textbf{вся} величина $C_{\mathrm{pre}}$ умножается на $\mu$:
+\begin{equation}
+\label{eq:cost-heavy}
+  C = \mu\, C_{\mathrm{pre}}, \qquad
+  \mu =
+  \begin{cases}
+    2, & \text{тяжёлая зависимость в ДВБ;} \\
+    1, & \text{иначе.}
+  \end{cases}
+\end{equation}
+Поле \texttt{estimated\_cost} в ответе Регулятора соответствует~$C$.
+
+\textbf{Эксплуатация в ЦР.} При регистрации установки с \texttt{certificate\_id} задаётся годовая оценка сопровождения (поле \texttt{support\_cost\_annual}):
+\begin{equation}
+\label{eq:support-annual}
+  S = \rho\, C, \qquad \rho = 0{,}1.
+\end{equation}
+Те же факторы, что увеличивают $C$ в \eqref{eq:cost-tcb-sbom}--\eqref{eq:cost-heavy}, линейно увеличивают $S$ через~\eqref{eq:support-annual}.
+
+\textbf{Числовой ориентир.} Задайте $E_{\mathrm{TCB}}$, $E_{\mathrm{OTH}}$, оцените $L$ и $K$ по пакету \texttt{abu}. Вычислите $C_{\mathrm{TCB}}^{\mathrm{sbom}}$ и $C_{\mathrm{OTH}}^{\mathrm{sbom}}$ по~\eqref{eq:cost-tcb-sbom}--\eqref{eq:cost-oth-sbom}; подставьте в~\eqref{eq:cost-pre} вместе с $\lambda_L L + \lambda_K K$. Если \texttt{numpy} в ДВБ, примените~\eqref{eq:cost-heavy} с $\mu=2$; затем $S$ по~\eqref{eq:support-annual}. При удвоении~$C$ удваивается и~$S$ (например, 500 и 1000 усл.\,ед. при $C\in\{5000,\,10\,000\}$). Снижение стоимости достигается уменьшением $E_{\mathrm{TCB}}$ (слабее связанные домены), а также $L$ и $K$ при рефакторинге кода ДВБ (при том же $E$ число доменов $N$ не увеличивает вклад SBOM).
+
+Реализация: \path{external_systems/regulator/} и \path{external_systems/digital_mine/}. Сравнивайте варианты по~\eqref{eq:cost-tcb-sbom}--\eqref{eq:support-annual}, а не по абсолютным числам примера.
+
+\section{Ввод в эксплуатацию}
+
+Сохраните \texttt{certificate\_id}, зарегистрируйте АБУ в ЦР и при необходимости установите политику \texttt{CR\_CERT\_POLICY=strict}.
+
+Подробнее оценка решения по регламенту описана в главе~\ref{ch:evaluation}; связь с архитектурой --- в главе~\ref{ch:architecture}; логика ДВБ и стоимостей (сертификации и эксплуатации) --- в разделе~\ref{sec:dvb-cost}.

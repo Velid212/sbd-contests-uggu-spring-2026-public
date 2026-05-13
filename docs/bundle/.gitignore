@@ -1,0 +1,19 @@
+# Собранный PDF — получать через build.sh
+*.pdf
+
+# LaTeX / XeLaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.idx
+*.ind
+*.ilg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+*.xdv

@@ -1,0 +1,67 @@
+\chapter{Инфраструктура проекта и тесты}
+\label{ch:infra}
+\index{Python}
+\index{Pipenv}
+\index{Docker}
+\index{pytest}
+
+\section{Окружение разработки}
+
+Требуется \textbf{Python 3.12+}. Зависимости устанавливаются \textbf{только} в изолированное окружение (Pipenv по умолчанию).
+
+\begin{itemize}
+  \item \texttt{make install} --- создаёт \texttt{.venv/}, ставит пакеты из \texttt{Pipfile};
+  \item команды в документации и Makefile --- через \texttt{pipenv run}.
+\end{itemize}
+
+\section{Структура репозитория}
+
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Каталог / файл} & \textbf{Назначение} \\
+\midrule
+\texttt{src\_starting\_point/} & Заготовка АБУ (отправная точка; намеренно неоптимальна как образец). \\
+\texttt{src\_solution/} & Рабочая зона решения участника. \\
+\texttt{external\_systems/digital\_mine/} & Прототип ЦР. \\
+\texttt{external\_systems/regulator/} & Прототип Регулятора. \\
+\texttt{tests/} & Интеграционные и прочие тесты репозитория. \\
+\texttt{docs/} & Документация, диаграммы PlantUML. \\
+\texttt{Makefile} & \texttt{install}, \texttt{tests-all}, пакет, сертификация, оценка, Docker. \\
+\bottomrule
+\end{tabularx}
+
+\section{Тестирование}
+
+Команда \texttt{make tests-all} запускает \texttt{pytest} и охватывает:
+
+\begin{itemize}
+  \item каталог \texttt{src\_starting\_point/tests/} --- юнит- и модульные тесты заготовки АБУ;
+  \item корневой каталог \texttt{tests/} --- интеграционные и прочие тесты репозитория;
+  \item конфигурацию \texttt{pytest.ini} в корне (в т.\,ч. маркеры);
+  \item тесты безопасности с маркером \texttt{security} (отдельный прогон в Регуляторе с порогом покрытия критичного кода).
+\end{itemize}
+
+Прочие артефакты, связанные с проверками:
+
+\begin{itemize}
+  \item логи и отчёты \texttt{pytest} при сертификации в песочнице Регулятора;
+  \item при необходимости --- \texttt{tests/test\_docker\_integration.py} и переменная \texttt{REGULATOR\_URL} для контейнерного сценария.
+\end{itemize}
+
+\section{Контейнеры}
+
+Опционально:
+
+\begin{itemize}
+  \item \texttt{make docker-build}, \texttt{make docker-up};
+  \item сервисы: порт 8080 (ЦР), 8081 (АБУ), 8082 (Регулятор);
+  \item для интеграционных тестов с контейнером задаётся \texttt{REGULATOR\_URL}.
+\end{itemize}
+
+\section{Диаграммы PlantUML}
+
+\begin{itemize}
+  \item исходники: \texttt{docs/diagrams/*.puml};
+  \item сборка PNG: \texttt{make diagrams} из корня репозитория (PlantUML, Java);
+  \item вставка в PDF настоящего документа --- из \texttt{docs/diagrams/png/} (см. макрос \texttt{\textbackslash diagram} в преамбуле).
+\end{itemize}

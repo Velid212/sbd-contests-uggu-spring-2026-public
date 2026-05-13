@@ -1,0 +1,58 @@
+% Преамбула для uggu_sbd_contest_2026.tex (кириллица: сборка через xelatex)
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setotherlanguage{english}
+\addto\captionsrussian{\renewcommand{\listfigurename}{Перечень иллюстраций}}
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=20mm,top=22mm,bottom=28mm}
+\usepackage{fancyhdr}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\doctitle}
+\fancyhead[R]{\small\sffamily версия \docversion}
+\fancyfoot[L]{\thepage}
+\fancyfoot[C]{}
+\fancyfoot[R]{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyhead[L]{\small\sffamily\doctitle}%
+  \fancyhead[R]{\small\sffamily версия \docversion}%
+  \fancyfoot[L]{\thepage}%
+  \fancyfoot[C]{}%
+  \fancyfoot[R]{}%
+  \renewcommand{\headrulewidth}{0.4pt}%
+  \renewcommand{\footrulewidth}{0.4pt}%
+}
+\usepackage{microtype}
+\usepackage{amsmath}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{nameref}
+\usepackage{makeidx}
+\makeindex
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue,breaklinks=true}
+\usepackage{xurl}
+
+% Рисунки: путь относительно каталога docs/bundle (PNG из docs/diagrams/png после make diagrams)
+\newcommand{\diagram}[2]{%
+  \IfFileExists{#1}{%
+    \includegraphics[width=#2]{#1}%
+  }{%
+    \fbox{\begin{minipage}{0.92\textwidth}\small\sffamily
+    \textbf{Рисунок недоступен:} \texttt{#1}.\\
+    Сгенерируйте PNG из PlantUML в корне репозитория: \texttt{make diagrams}.
+    \end{minipage}}%
+  }%
+}

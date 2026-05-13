@@ -1,0 +1,138 @@
+% Компиляция PDF: ./build_pdf.sh (см. docs/slides/README.md) или дважды: xelatex presentation.tex
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\usepackage{fontspec}
+\setmainfont{DejaVu Sans}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+
+\input{lk-theme.tex}
+
+\title{Инструктаж перед стартом конкурса}
+\subtitle{Что прочитать, что сделать, как не потерять баллы}
+\author{Учебный стенд}
+\institute{Конкурс / прототип}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Формат этого инструктажа}
+  \begin{itemize}
+    \item Слайды рассчитаны на \textbf{10--15 минут} до начала соревнований.
+    \item Цель: дать минимально достаточный маршрут, чтобы сразу начать работу без лишнего чтения.
+    \item Фокус: \textbf{3 обязательных документа}, практические шаги на 2 дня и контрольные проверки перед сдачей.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Что нужно прочитать в первую очередь}
+  \begin{enumerate}
+    \item \texttt{docs/contest\_task.md} --- постановка задачи и обязательные артефакты.
+    \item \texttt{docs/quickstart\_2days.md} --- пошаговый маршрут на 2 дня.
+    \item \texttt{docs/criteria\_rubric.md} --- как начисляются баллы по C01--C25.
+  \end{enumerate}
+  \vspace{0.6em}
+  \textbf{Важно:} этого набора достаточно, чтобы начать выполнять задание.
+\end{frame}
+
+\begin{frame}{Вспомогательные документы (по необходимости)}
+  \begin{itemize}
+    \item \texttt{docs/README.md} --- карта документации.
+    \item \texttt{docs/contest\_regulations.md} --- полный регламент и правила разрешения равенства баллов.
+    \item \texttt{docs/certification\_process.md} --- подробная процедура сертификации.
+    \item \texttt{docs/architecture.md}, \texttt{docs/context.md} --- архитектура и предметная область.
+    \item \texttt{docs/sbom\_guide.md}, \texttt{docs/tara\_abu.md}, \texttt{docs/security\_tests.md}, \texttt{docs/faq\_participant.md}.
+  \end{itemize}
+  \vspace{0.4em}
+  Рекомендованная последовательность уже дана в \texttt{quickstart\_2days.md}.
+\end{frame}
+
+\begin{frame}{О чём само задание (кратко)}
+  \begin{itemize}
+    \item Вы дорабатываете решение в \texttt{src\_solution/} на базе \texttt{src\_starting\_point/}.
+    \item Ключевая идея: минимальная и проверяемая ДВБ, явные IPC-политики, контролируемое междоменное взаимодействие.
+    \item Тесты решения должны находиться в \texttt{src\_solution/tests/**}.
+    \item Сквозной e2e-сценарий должен соответствовать \texttt{docs/operational\_scenario\_v1.md}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Практический маршрут на 2 дня}
+  \begin{itemize}
+    \item \textbf{День 1:} структура решения, домены, монитор безопасности, unit/module тесты.
+    \item \textbf{День 2:} integration/e2e, сертификация, отчёт, финальный прогон оценки.
+    \item Рабочий чек-лист и типичные ошибки смотрите в \texttt{docs/quickstart\_2days.md}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Обязательные команды самопроверки}
+  \begin{itemize}
+    \item \texttt{make install}
+    \item \texttt{make tests-all}
+    \item \texttt{make evaluate-score}
+    \item \texttt{make certify-abu-solution}
+  \end{itemize}
+  \vspace{0.6em}
+  \textbf{Платформа проверки:} Linux (или совместимая среда: WSL2/Codespaces/контейнер).
+\end{frame}
+
+\begin{frame}{Критерии оценки: как устроена шкала}
+  \begin{itemize}
+    \item \textbf{25 критериев} (C01--C25), каждый 0--3 балла; номинальная сумма \textbf{75}.
+    \item Итог оценки: только \textbf{сумма по критериям (raw)}.
+    \item Автоматически: C01--C19, C23--C25; экспертно жюри: C20--C22.
+    \item Детали уровней 0--3 --- в \texttt{docs/criteria\_rubric.md}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Где чаще всего теряются баллы}
+  \begin{itemize}
+    \item C02: тесты решения размещены вне \texttt{src\_solution/tests/**}.
+    \item C07: есть скрипты, но нет успешной сертификации решения.
+    \item C08: e2e-тест не покрывает сквозной сценарий из \texttt{docs/operational\_scenario\_v1.md}.
+    \item C23--C25: раздутые домены ДВБ, избыточные IPC-интерфейсы, слабые тесты монитора.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Примеры из \texttt{references}}
+  \begin{itemize}
+    \item \texttt{references/isolation} --- процессная изоляция и базовый IPC.
+    \item \texttt{references/secure\_ipc} --- политики маршрутизации и подход ``запрещено по умолчанию''.
+    \item \texttt{references/traffic\_light\_demo} --- наглядный учебный сценарий с монитором безопасности.
+    \item Краткое руководство по ``Светофору'': \texttt{docs/traffic\_light\_demo.md}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Финальный чек-лист перед сдачей}
+  \begin{itemize}
+    \item Пройдены \texttt{make tests-all} и \texttt{make evaluate-score}.
+    \item Пройдена \texttt{make certify-abu-solution} с успешным ответом Регулятора.
+    \item Отчёт заполнен в \texttt{src\_solution/docs/solution.md}.
+    \item Подготовлена сдача по правилам из \texttt{docs/contest\_task.md} и \texttt{docs/contest\_regulations.md}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Куда смотреть, если застряли}
+  \begin{itemize}
+    \item Сначала: \texttt{docs/quickstart\_2days.md}.
+    \item Затем: \texttt{docs/faq\_participant.md}.
+    \item Для формальных деталей: \texttt{docs/criteria\_rubric.md}, \texttt{docs/contest\_regulations.md}.
+    \item Для архитектуры и примеров: \texttt{docs/architecture.md}, \texttt{docs/traffic\_light\_demo.md}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Итог}
+  \begin{itemize}
+    \item Читайте только \textbf{3 обязательных документа}, остальное --- по необходимости.
+    \item Держите фокус на проверяемом результате: тесты, сертификация, отчёт.
+    \item Не усложняйте архитектуру сверх необходимого для критериев C01--C25.
+  \end{itemize}
+  \vspace{0.8em}
+  \centering\large Удачи на соревновании!
+\end{frame}
+
+\end{document}
