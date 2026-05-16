@@ -1,0 +1,11 @@
+@startuml
+actor Operator
+component "ABU API" as API
+component "TCB Controller" as TCB
+component "SecurityMonitor" as MON
+component "OTHER AI / numpy" as OTHER
+Operator --> API
+API --> TCB
+TCB --> MON
+MON --> OTHER : allowed request/response
+@enduml

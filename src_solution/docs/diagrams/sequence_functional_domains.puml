@@ -1,0 +1,12 @@
+@startuml
+participant API
+participant "TCB Controller" as TCB
+participant Monitor
+participant "Other DomainProcess" as Other
+API -> TCB: tick
+TCB -> Monitor: authorize smooth_vibration
+Monitor -> Other: request
+Other --> Monitor: response
+Monitor --> TCB: bounded value
+TCB --> API: mission state
+@enduml

@@ -1,0 +1,41 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:33333333-3333-3333-3333-333333333333",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-03-24T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "abu-solution-tcb",
+      "version": "0.2.0"
+    }
+  },
+  "components": [
+    {
+      "type": "application",
+      "name": "abu-tcb-controller",
+      "version": "0.2.0",
+      "bom-ref": "abu-tcb-controller",
+      "description": "Small trusted controller, safety checks, audit log and reference monitor"
+    },
+    {
+      "type": "library",
+      "name": "pydantic",
+      "version": "2.10.0",
+      "bom-ref": "pkg:pypi/pydantic@2.10.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "abu-tcb-controller",
+      "dependsOn": [
+        "pkg:pypi/pydantic@2.10.0"
+      ]
+    },
+    {
+      "ref": "pkg:pypi/pydantic@2.10.0",
+      "dependsOn": []
+    }
+  ]
+}

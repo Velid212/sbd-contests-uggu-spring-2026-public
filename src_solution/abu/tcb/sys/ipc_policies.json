@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "allows": [
+    {
+      "from": "tcb_controller",
+      "to": "other_ai",
+      "operations": ["suggest_regime", "anomaly_vibration"],
+      "description": "Only numeric AI hints may cross from untrusted AI helper to trusted controller."
+    },
+    {
+      "from": "tcb_controller",
+      "to": "other_numpy",
+      "operations": ["smooth_vibration"],
+      "description": "Numpy smoothing is isolated outside TCB and returns one bounded float."
+    }
+  ]
+}

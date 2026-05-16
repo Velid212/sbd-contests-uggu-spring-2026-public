@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "default": "deny",
+  "domains": [
+    "http_adapter",
+    "tcb_controller",
+    "event_log",
+    "other_ai",
+    "other_numpy"
+  ],
+  "allows": [
+    {"source": "http_adapter", "target": "tcb_controller", "operations": ["start_mission", "tick", "status"]},
+    {"source": "tcb_controller", "target": "event_log", "operations": ["record", "read"]},
+    {"source": "tcb_controller", "target": "other_ai", "operations": ["suggest_regime"]},
+    {"source": "tcb_controller", "target": "other_numpy", "operations": ["smooth_vibration"]}
+  ]
+}

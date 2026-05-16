@@ -1,0 +1,36 @@
+{
+  "_note": "SBOM solution: TCB has only application code and lightweight API/runtime deps; numpy is isolated in OTHER.",
+  "timestamp": "2026-03-24T00:00:00Z",
+  "domain_ipc_untrusted_boundary_edges": 3,
+  "domain_ipc_trusted_boundary_edges": 2,
+  "tcb": {
+    "serialNumber": "urn:uuid:33333333-3333-3333-3333-333333333333",
+    "metadata": {"type": "application", "name": "abu-solution-tcb", "version": "0.2.0"},
+    "components": [
+      {"type": "application", "name": "abu-tcb-controller", "version": "0.2.0", "bom_ref": "abu-tcb-controller", "description": "Small trusted controller, safety checks, audit log and reference monitor"},
+      {"type": "library", "name": "pydantic", "version": "2.10.0", "bom_ref": "pkg:pypi/pydantic@2.10.0"}
+    ],
+    "dependencies": [
+      {"ref": "abu-tcb-controller", "dependsOn": ["pkg:pypi/pydantic@2.10.0"]},
+      {"ref": "pkg:pypi/pydantic@2.10.0", "dependsOn": []}
+    ]
+  },
+  "other": {
+    "serialNumber": "urn:uuid:44444444-4444-4444-4444-444444444444",
+    "metadata": {"type": "application", "name": "abu-solution-other", "version": "0.2.0"},
+    "components": [
+      {"type": "application", "name": "abu-other-ai", "version": "0.2.0", "bom_ref": "abu-other-ai", "description": "Untrusted advisory AI and numpy domain"},
+      {"type": "library", "name": "fastapi", "version": "0.115.0", "bom_ref": "pkg:pypi/fastapi@0.115.0"},
+      {"type": "library", "name": "uvicorn", "version": "0.32.0", "bom_ref": "pkg:pypi/uvicorn@0.32.0"},
+      {"type": "library", "name": "httpx", "version": "0.28.0", "bom_ref": "pkg:pypi/httpx@0.28.0"},
+      {"type": "library", "name": "numpy", "version": "2.0.0", "bom_ref": "pkg:pypi/numpy@2.0.0"}
+    ],
+    "dependencies": [
+      {"ref": "abu-other-ai", "dependsOn": ["pkg:pypi/numpy@2.0.0"]},
+      {"ref": "pkg:pypi/fastapi@0.115.0", "dependsOn": []},
+      {"ref": "pkg:pypi/uvicorn@0.32.0", "dependsOn": []},
+      {"ref": "pkg:pypi/httpx@0.28.0", "dependsOn": []},
+      {"ref": "pkg:pypi/numpy@2.0.0", "dependsOn": []}
+    ]
+  }
+}
