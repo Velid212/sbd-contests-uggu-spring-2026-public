@@ -1,0 +1,1 @@
+2026-05-17T06:58:20.419439+00:00	WARNING	deny edge=other_ai->tcb_controller operation=write_state	hash=f27a1a9fa02fe57fcc9436245b712e414d3074bed5098d3d784dc65246fc2dc6
