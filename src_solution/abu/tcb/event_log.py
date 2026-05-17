@@ -1,4 +1,3 @@
-"""Tamper-evident audit log used by the trusted ABU core."""
 from __future__ import annotations
 
 import hashlib
@@ -10,7 +9,6 @@ from pathlib import Path
 
 
 class EventLevel(str, Enum):
-    """Audit event severity."""
 
     INFO = "INFO"
     WARNING = "WARNING"
@@ -22,8 +20,6 @@ _RING_SIZE = 10
 
 
 class EventLog:
-    """Small trusted journal: ring buffer, full file and hash chain."""
-
     def __init__(self, log_dir: Path | None = None) -> None:
         self._dir = log_dir or Path.cwd() / "var" / "abu_solution_logs"
         self._full_path = self._dir / "abu_events_full.log"
@@ -64,12 +60,10 @@ class EventLog:
         return digest
 
     def ring_snapshot(self) -> list[str]:
-        """Return ring-buffer contents in chronological order."""
         with self._lock:
             return list(self._ring)
 
     def read_full_tail(self, max_lines: int = 500) -> str:
-        """Return the last lines of the full audit log."""
         if not self._full_path.is_file():
             return ""
         lines = self._full_path.read_text(encoding="utf-8").splitlines()

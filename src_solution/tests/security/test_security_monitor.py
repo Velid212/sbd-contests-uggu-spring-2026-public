@@ -1,4 +1,4 @@
-"""Security tests for reference monitor and IPC policies."""
+"""Тесты политик IPC"""
 from __future__ import annotations
 
 import pytest

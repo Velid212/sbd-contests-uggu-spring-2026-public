@@ -1,4 +1,4 @@
-"""Integration tests for the src_solution ABU API."""
+"""Тесты интеграии"""
 from __future__ import annotations
 
 import os
@@ -7,7 +7,6 @@ import pytest
 from fastapi.testclient import TestClient
 
 from src_solution.abu.app import app
-
 
 @pytest.fixture()
 def client() -> TestClient:

@@ -1,4 +1,3 @@
-"""Process boundary for non-TCB helpers."""
 from __future__ import annotations
 
 import multiprocessing as mp
@@ -11,8 +10,6 @@ from src_solution.abu.other.pseudo_ai import anomaly_vibration, regime_suggest
 
 @dataclass(frozen=True)
 class DomainResponse:
-    """Response produced by an isolated domain process."""
-
     ok: bool
     value: Any = None
     error: str = ""
@@ -33,8 +30,6 @@ def _worker(operation: str, payload: dict[str, Any], queue: mp.Queue) -> None:
 
 
 class DomainProcess:
-    """Execute a single request in an untrusted helper process."""
-
     def request(self, operation: str, payload: dict[str, Any], timeout: float = 3.0) -> DomainResponse:
         """Run request/response IPC through multiprocessing.Process."""
         ctx = mp.get_context("fork") if hasattr(mp, "get_context") else mp

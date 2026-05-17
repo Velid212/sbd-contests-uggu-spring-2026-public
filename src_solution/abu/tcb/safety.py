@@ -1,4 +1,3 @@
-"""Trusted safety invariants for drilling missions."""
 from __future__ import annotations
 
 from typing import Literal
@@ -7,7 +6,6 @@ RiskLevel = Literal["low", "medium", "high"]
 
 
 def clamp_positive(value: float, fallback: float) -> float:
-    """Return value when it is a positive number, otherwise fallback."""
     try:
         number = float(value)
     except (TypeError, ValueError):
@@ -16,17 +14,14 @@ def clamp_positive(value: float, fallback: float) -> float:
 
 
 def enforce_depth_cap(depth_m: float, max_depth_m: float) -> bool:
-    """Allow motion only while depth is within the target cap."""
     return float(depth_m) <= float(max_depth_m)
 
 
 def enforce_rpm_cap(rpm: float, max_rpm: float) -> bool:
-    """Allow rotation only while RPM is within the configured cap."""
     return float(rpm) <= float(max_rpm)
 
 
 def risk_flag(vibration: float, pressure: float, depth_m: float) -> RiskLevel:
-    """Trusted risk classifier with explicit thresholds."""
     score = 0
     if vibration > 0.75:
         score += 2

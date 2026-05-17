@@ -1,9 +1,7 @@
-"""Untrusted pseudo-AI heuristics kept outside the TCB."""
 from __future__ import annotations
 
 
 def anomaly_vibration(samples: list[float]) -> float:
-    """Calculate a bounded anomaly score for the last vibration samples."""
     if not samples:
         return 1.0
     if len(samples) == 1:
@@ -16,7 +14,6 @@ def anomaly_vibration(samples: list[float]) -> float:
 
 
 def regime_suggest(depth_m: float, torque_nm: float) -> tuple[float, float]:
-    """Return recommended RPM and feed. This is advisory, not trusted."""
     rpm = 120.0 + min(float(depth_m) * 2.0, 80.0)
     if float(torque_nm) > 5000.0:
         rpm *= 0.85

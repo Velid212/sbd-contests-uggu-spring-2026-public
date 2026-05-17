@@ -1,4 +1,3 @@
-"""HTTP API of the cyberimmune ABU solution."""
 from __future__ import annotations
 
 import os
@@ -23,15 +22,11 @@ app = FastAPI(title="АБУ solution", version="0.2.0")
 
 
 class MissionIn(BaseModel):
-    """Drilling mission command."""
-
     target_depth_m: float = Field(gt=0, le=200)
     max_rpm: float = Field(default=300.0, gt=0)
 
 
 class MissionState(BaseModel):
-    """Trusted state of one active mission."""
-
     mission_id: str
     target_depth_m: float
     depth_m: float = 0.0
@@ -75,7 +70,6 @@ def events_full_tail() -> dict[str, str]:
 
 @app.get("/api/v1/status")
 def status() -> dict[str, Any]:
-    """Current telemetry."""
     if _mission is None:
         return {"idle": True}
     m = _mission
@@ -96,7 +90,6 @@ def status() -> dict[str, Any]:
 
 @app.post("/api/v1/missions")
 def start_mission(body: MissionIn) -> dict[str, Any]:
-    """Accept a new mission command after trusted validation."""
     global _mission
     mid = str(uuid.uuid4())
     _mission = MissionState(
@@ -118,7 +111,6 @@ def current_mission() -> dict[str, Any]:
 
 @app.post("/api/v1/missions/tick")
 def tick_step() -> dict[str, Any]:
-    """Simulate one trusted control tick."""
     global _mission
     if _mission is None:
         raise HTTPException(status_code=400, detail="нет миссии")
@@ -152,14 +144,11 @@ def tick_step() -> dict[str, Any]:
 
 
 class AISuggestIn(BaseModel):
-    """Input for untrusted advisory AI."""
-
     depth_m: float = Field(ge=0)
     torque_nm: float = Field(ge=0)
 
 
 @app.post("/api/v1/ai/suggest")
 def ai_suggest(body: AISuggestIn) -> dict[str, float]:
-    """Return advisory drilling mode from an isolated non-TCB process."""
     rpm, feed = _call_other("suggest_regime", {"depth_m": body.depth_m, "torque_nm": body.torque_nm})
     return {"suggested_rpm": float(rpm), "suggested_feed_mm_rev": float(feed)}

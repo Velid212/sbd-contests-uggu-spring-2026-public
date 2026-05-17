@@ -1,4 +1,4 @@
-"""Security tests for process-isolated untrusted domains."""
+"""Тесты безопасности для недоверенных доменов"""
 from __future__ import annotations
 
 import pytest

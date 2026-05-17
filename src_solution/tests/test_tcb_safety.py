@@ -1,4 +1,4 @@
-"""Tests for trusted safety checks."""
+"""Тесты безопасности"""
 from __future__ import annotations
 
 from src_solution.abu.tcb.safety import (

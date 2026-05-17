@@ -1,4 +1,3 @@
-"""Small trusted deterministic heuristics used to validate untrusted suggestions."""
 
 from __future__ import annotations
 
@@ -8,7 +7,6 @@ RiskLevel = Literal["low", "medium", "high"]
 
 
 def anomaly_vibration(samples: list[float]) -> float:
-    """Return normalized latest-sample deviation in the range [0, 1]."""
     if not samples:
         return 1.0
     if len(samples) == 1:
@@ -20,7 +18,6 @@ def anomaly_vibration(samples: list[float]) -> float:
 
 
 def regime_suggest(depth_m: float, torque_nm: float) -> tuple[float, float]:
-    """Deterministic safe baseline for RPM/feed suggestions."""
     rpm = 120.0 + min(max(depth_m, 0.0) * 2.0, 80.0)
     if torque_nm > 5000:
         rpm *= 0.85
@@ -29,7 +26,6 @@ def regime_suggest(depth_m: float, torque_nm: float) -> tuple[float, float]:
 
 
 def risk_flag(vibration: float, pressure: float, depth_m: float) -> RiskLevel:
-    """Classify risk using transparent thresholds."""
     if vibration >= 0.85 and pressure >= 180.0 and depth_m >= 80.0:
         return "high"
     if vibration >= 0.6 or pressure >= 160.0:

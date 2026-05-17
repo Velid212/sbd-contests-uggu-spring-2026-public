@@ -1,5 +1,3 @@
-"""Default-deny security monitor for domain IPC requests/responses."""
-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -10,8 +8,6 @@ from src_solution.abu.tcb.event_log import EventLevel, EventLog, default_log
 
 
 class Domain(str, Enum):
-    """Execution domains separated by trust level."""
-
     TCB_CONTROLLER = "tcb_controller"
     OTHER_AI = "other_ai"
     OTHER_NUMPY = "other_numpy"
@@ -21,8 +17,6 @@ class Domain(str, Enum):
 
 @dataclass(frozen=True)
 class Request:
-    """IPC request inspected by the monitor."""
-
     source: Domain
     target: Domain
     operation: str
@@ -31,16 +25,12 @@ class Request:
 
 @dataclass(frozen=True)
 class Response:
-    """IPC response returned after monitor decision."""
-
     allowed: bool
     reason: str
 
 
 @dataclass(frozen=True)
 class PolicyRule:
-    """One allow-list rule. Absence of a match means deny."""
-
     source: Domain
     target: Domain
     operations: tuple[str, ...]
@@ -55,8 +45,6 @@ DEFAULT_POLICIES: tuple[PolicyRule, ...] = (
 
 
 class SecurityMonitor:
-    """Mediates all cross-domain calls with explicit policies."""
-
     def __init__(
         self,
         policies: tuple[PolicyRule, ...] = DEFAULT_POLICIES,
@@ -66,7 +54,6 @@ class SecurityMonitor:
         self._event_log = event_log
 
     def authorize(self, request: Request) -> Response:
-        """Return allow/deny decision and write a security event."""
         for rule in self._policies:
             if (
                 request.source == rule.source
@@ -89,7 +76,6 @@ class SecurityMonitor:
         return Response(False, "default deny")
 
     def require(self, request: Request) -> None:
-        """Raise PermissionError for denied IPC request."""
         response = self.authorize(request)
         if not response.allowed:
             raise PermissionError(response.reason)

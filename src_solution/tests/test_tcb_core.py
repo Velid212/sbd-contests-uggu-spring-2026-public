@@ -1,4 +1,4 @@
-"""Unit tests for trusted ABU modules."""
+"""Юнит тесты АБУ"""
 
 from __future__ import annotations
 

@@ -1,4 +1,3 @@
-"""Compatibility API for trusted safety checks."""
 from src_solution.abu.tcb.safety import (
     RiskLevel,
     clamp_positive,

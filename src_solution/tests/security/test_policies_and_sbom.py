@@ -1,4 +1,4 @@
-"""Security tests for policies and SBOM split."""
+"""Тесты для СБОМ"""
 from __future__ import annotations
 
 import json

@@ -1,4 +1,4 @@
-"""Tests for trusted event_log."""
+"""Тест журнала event log"""
 from __future__ import annotations
 
 from src_solution.abu.event_log import EventLevel, EventLog
